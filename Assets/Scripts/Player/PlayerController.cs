@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     private Vector2 curMovementInput;
     public float jumpPower;
     public LayerMask groundLayerMask;
+    public float runSpeed;
+    private bool isRunning = false;
+    public float runStamina;
 
     [Header("카메라 관련")] 
     public Transform cameraContainer;
@@ -49,7 +52,22 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
-        dir *= moveSpeed;
+
+        // isRunning이 true, 스태미나가 비어 있지 않다면 달리도록 구현
+        if (isRunning && CharacterManager.Instance.Player.condition.CanUseStamina(5))
+        {
+            dir *= runSpeed;
+            if (dir.magnitude > 0)
+            {
+                CharacterManager.Instance.Player.condition.DecreaseStamina(runStamina);
+            }
+        }
+        else
+        {
+            isRunning = false;
+            dir *= moveSpeed;
+        }
+        
         dir.y = _rigidbody.velocity.y;
 
         _rigidbody.velocity = dir;
@@ -78,6 +96,19 @@ public class PlayerController : MonoBehaviour
     public void OnLookInput(InputAction.CallbackContext context)
     {
         mouseDelta = context.ReadValue<Vector2>();
+    }
+
+    // shift를 통해 달리기 기능 추가
+    public void OnRunInput(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            isRunning = true;
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            isRunning = false;
+        }
     }
     
     private bool IsGrounded()
