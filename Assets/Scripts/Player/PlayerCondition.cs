@@ -43,6 +43,11 @@ public class PlayerCondition : MonoBehaviour, IDamagable
         health.Add(amount);
     }
 
+    public void Eat(float amount)
+    {
+        stamina.Add(amount);
+    }
+
     public void TakePhysicalDamage(int damageAmount)
     {
         health.Subtract(damageAmount);

@@ -140,4 +140,16 @@ public class PlayerController : MonoBehaviour
 
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
     }
+
+    public void PlayerBoost(float value)
+    {
+        moveSpeed *= value;
+        runSpeed *= value;
+    }
+
+    public void PlayerBoostEnd(float value)
+    {
+        moveSpeed /= value;
+        runSpeed /= value;
+    }
 }
