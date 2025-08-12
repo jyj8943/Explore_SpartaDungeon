@@ -51,9 +51,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Inventory",
+                    "name": "Perspective",
                     "type": "Button",
-                    "id": "954f4416-1ae1-45c9-9fe4-d88e5f454123",
+                    "id": "92d4b640-bf53-4d78-9df6-3ee4e3b0393b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -162,12 +162,12 @@
                 },
                 {
                     "name": "",
-                    "id": "a074a100-82ae-410c-8ded-cf40535de0d0",
+                    "id": "f21b534c-73c3-462a-9239-61f0ca4dfc9b",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Inventory",
+                    "action": "Perspective",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

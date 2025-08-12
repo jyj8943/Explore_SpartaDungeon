@@ -17,10 +17,12 @@ public class PlayerController : MonoBehaviour
 
     [Header("카메라 관련")] 
     public Transform cameraContainer;
+    public Transform ThirdPersonCameraContainer;
     public float minXLook;
     public float maxXLook;
     private float camCurXRot;
     public float lookSensitivity;
+    private bool isFirstPerson = true;
 
     private Vector2 mouseDelta;
 
@@ -39,14 +41,24 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FixedUpdate()
-    {
+    { 
         Move();
     }
 
     private void LateUpdate()
     {
-        if (canLook)
+        if (canLook && isFirstPerson)
+        {
+            cameraContainer.gameObject.SetActive(true);
+            ThirdPersonCameraContainer.gameObject.SetActive(false);
             CameraLook();
+        }
+        else if (canLook && !isFirstPerson)
+        {
+            cameraContainer.gameObject.SetActive(false);
+            ThirdPersonCameraContainer.gameObject.SetActive(true);
+            ThirdPersonCameraLook();
+        }
     }
 
     private void Move()
@@ -72,7 +84,7 @@ public class PlayerController : MonoBehaviour
 
         _rigidbody.velocity = dir;
     }
-
+    
     public void OnMoveInput(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
@@ -110,6 +122,22 @@ public class PlayerController : MonoBehaviour
             isRunning = false;
         }
     }
+
+    // 카메라 시점을 바꾸는 메서드
+    public void OnChangePerspective(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            if (isFirstPerson)
+            {
+                isFirstPerson = false;
+            }
+            else
+            {
+                isFirstPerson = true;
+            }
+        }
+    }
     
     private bool IsGrounded()
     {
@@ -139,6 +167,24 @@ public class PlayerController : MonoBehaviour
         cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
 
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
+    }
+
+    private void ThirdPersonCameraLook()
+    {
+        Vector2 mouse = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector3 camAngle = ThirdPersonCameraContainer.rotation.eulerAngles;
+
+        float x = camAngle.x - mouse.y;
+        if (x < 180f)
+        {
+            x = Mathf.Clamp(x, -1f, 45f);
+        }
+        else
+        {
+            x = Mathf.Clamp(x, 320f, 361f);
+        }
+        
+        transform.rotation = Quaternion.Euler(x, camAngle.y + mouse.x, camAngle.z);
     }
 
     public void PlayerBoost(float value)

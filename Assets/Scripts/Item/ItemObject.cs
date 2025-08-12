@@ -21,8 +21,7 @@ public class ItemObject : MonoBehaviour, IInteractable
     public virtual void OnInteract()
     {
         CharacterManager.Instance.Player.itemData = data;
-
-        // haracterManager.Instance.Player.addItem?.Invoke();
+        
         if (this.data.type == ItemType.Consumable)
         {
             for (int i = 0; i < data.consumables.Length; i++)
