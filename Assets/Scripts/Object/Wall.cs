@@ -39,6 +39,15 @@ public class Wall : MonoBehaviour
         }
     }
 
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.transform.CompareTag("Player"))
+        {
+            isPlayerClimbing = false;
+            CharacterManager.Instance.Player.controller.ChangeMoving(false);
+        }
+    }
+
     private bool PlayerPosCheck()
     {
         // 위치 값은 계속 비교를 해야할듯
