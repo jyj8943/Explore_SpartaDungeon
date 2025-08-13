@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [Header("카메라 관련")] 
     public Transform cameraContainer;
     public Transform ThirdPersonCameraContainer;
+    public Camera ThirdPersonCamera;
     public float minXLook;
     public float maxXLook;
     private float camCurXRot;
@@ -41,8 +42,15 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FixedUpdate()
-    { 
-        Move();
+    {
+        if (isFirstPerson)
+        {
+            Move();
+        }
+        else
+        {
+            ThirdPersonMove();
+        }
     }
 
     private void LateUpdate()
@@ -83,6 +91,38 @@ public class PlayerController : MonoBehaviour
         dir.y = _rigidbody.velocity.y;
 
         _rigidbody.velocity = dir;
+    }
+
+    private void ThirdPersonMove()
+    {
+        Vector3 mMoveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        bool isMove = mMoveInput.magnitude != 0;
+
+        if (isMove)
+        {
+            Vector3 lookForward =
+                new Vector3(ThirdPersonCameraContainer.forward.x, 0f, ThirdPersonCameraContainer.forward.z).normalized;
+            Vector3 lookRight = new Vector3(ThirdPersonCameraContainer.right.x, 0f, ThirdPersonCameraContainer.right.z)
+                .normalized;
+            Vector3 moveDir = lookForward * mMoveInput.y + lookRight * mMoveInput.x;
+            
+            Quaternion viewRot = Quaternion.LookRotation(moveDir.normalized);
+            
+            // this.transform.rotation = Quaternion.Lerp(this.transform.rotation, viewRot, Time.deltaTime);
+            
+            if (isRunning && CharacterManager.Instance.Player.condition.CanUseStamina(5))
+            {
+                transform.position += moveDir * runSpeed * Time.deltaTime;
+                if (moveDir.magnitude > 0)
+                {
+                    CharacterManager.Instance.Player.condition.DecreaseStamina(runStamina);
+                }
+            }
+            else
+            {
+                transform.position += moveDir * moveSpeed * Time.deltaTime;
+            }
+        }
     }
     
     public void OnMoveInput(InputAction.CallbackContext context)
@@ -184,7 +224,7 @@ public class PlayerController : MonoBehaviour
             x = Mathf.Clamp(x, 320f, 361f);
         }
         
-        transform.rotation = Quaternion.Euler(x, camAngle.y + mouse.x, camAngle.z);
+        ThirdPersonCameraContainer.transform.rotation = Quaternion.Euler(x, camAngle.y + mouse.x, camAngle.z);
     }
 
     public void PlayerBoost(float value)

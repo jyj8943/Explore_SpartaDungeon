@@ -119,5 +119,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPos: {x: 0, y: 0, z: 0}
-  endPos: {x: -5, y: 0.3, z: -10}
+  endPos: {x: 0, y: 0, z: 0}
   moveSpeed: 2
