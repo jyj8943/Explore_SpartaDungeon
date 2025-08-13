@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public float runSpeed;
     private bool isRunning = false;
     public float runStamina;
+    private bool isClimbingWall = false;
 
     [Header("카메라 관련")] 
     public Transform cameraContainer;
@@ -46,11 +47,25 @@ public class PlayerController : MonoBehaviour
     {
         if (isFirstPerson)
         {
-            Move();
+            if (isClimbingWall)
+            {
+                ClimbingWallMove();
+            }
+            else
+            {
+                Move();
+            }
         }
         else
         {
-            ThirdPersonMove();
+            if (isClimbingWall)
+            {
+                ClimbingWallMove();
+            }
+            else
+            {
+                ThirdPersonMove();
+            }
         }
     }
 
@@ -124,6 +139,19 @@ public class PlayerController : MonoBehaviour
                 transform.position += moveDir * moveSpeed * Time.deltaTime;
             }
         }
+    }
+
+    private void ClimbingWallMove()
+    {
+        Debug.Log("벽타기 실행");
+        
+        Vector3 dir = transform.up * curMovementInput.y + transform.right * curMovementInput.x;
+
+        dir *= moveSpeed;
+        
+        // dir.y = _rigidbody.velocity.y;
+
+        _rigidbody.velocity = dir;
     }
     
     public void OnMoveInput(InputAction.CallbackContext context)
@@ -238,5 +266,11 @@ public class PlayerController : MonoBehaviour
     {
         moveSpeed /= value;
         runSpeed /= value;
+    }
+
+    public void ChangeMoving(bool isClimbing)
+    {
+        isClimbingWall = isClimbing;
+        _rigidbody.useGravity = !isClimbing;
     }
 }
