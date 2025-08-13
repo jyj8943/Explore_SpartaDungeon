@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public Transform cameraContainer;
     public Transform ThirdPersonCameraContainer;
     public Camera ThirdPersonCamera;
+    public GameObject PlayerCapsule;
     public float minXLook;
     public float maxXLook;
     private float camCurXRot;
@@ -108,7 +109,7 @@ public class PlayerController : MonoBehaviour
             
             Quaternion viewRot = Quaternion.LookRotation(moveDir.normalized);
             
-            // this.transform.rotation = Quaternion.Lerp(this.transform.rotation, viewRot, Time.deltaTime);
+            PlayerCapsule.transform.rotation = Quaternion.Lerp(this.transform.rotation, viewRot, Time.deltaTime);
             
             if (isRunning && CharacterManager.Instance.Player.condition.CanUseStamina(5))
             {

@@ -1849,7 +1849,8 @@ MonoBehaviour:
   runStamina: 0.5
   cameraContainer: {fileID: 428185614}
   ThirdPersonCameraContainer: {fileID: 150794192}
-  ThridPersonCamera: {fileID: 461112483}
+  ThirdPersonCamera: {fileID: 0}
+  PlayerCapsule: {fileID: 1815013484}
   minXLook: -85
   maxXLook: 85
   lookSensitivity: 0.2
